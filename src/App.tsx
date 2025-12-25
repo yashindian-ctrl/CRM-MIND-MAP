@@ -513,11 +513,21 @@ export default function App() {
           collapsed={collapsed}
           onToggle={handleToggle}
         />
+
+        {/* Legend inline on desktop */}
+        {!isMobile && (
+          <div className="mt-8">
+            <Legend isMobile={isMobile} />
+          </div>
+        )}
       </div>
 
-      <div className={`fixed ${isMobile ? 'bottom-4 left-4 right-4' : 'bottom-4 left-4'} z-10`}>
-        <Legend isMobile={isMobile} />
-      </div>
+      {/* Legend fixed at bottom on mobile */}
+      {isMobile && (
+        <div className="fixed bottom-4 left-4 right-4 z-10">
+          <Legend isMobile={isMobile} />
+        </div>
+      )}
     </div>
   );
 }
