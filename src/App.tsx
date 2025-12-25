@@ -505,7 +505,7 @@ export default function App() {
 
   return (
     <div className="w-full min-h-screen bg-[#0B0F14] overflow-auto">
-      <div className="p-4 md:p-8">
+      <div className="p-4 md:p-8 min-w-max">
         <Node
           node={crmData}
           level={0}
