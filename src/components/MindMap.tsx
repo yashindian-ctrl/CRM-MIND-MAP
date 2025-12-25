@@ -12,6 +12,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import CustomNode, { CustomNodeData } from './CustomNode';
+import Legend from './Legend';
 import { TreeNode } from '../data/crmData';
 import { getLayoutedElements } from '../utils/layoutUtils';
 
@@ -46,6 +47,10 @@ const MindMap = ({ data }: MindMapProps) => {
           hasChildren,
           isExpanded: !isCollapsed,
           type: treeNode.type,
+          lifecycle: treeNode.lifecycle,
+          icon: treeNode.icon,
+          owner: treeNode.owner,
+          isGoldenPath: treeNode.isGoldenPath,
           onToggle: () => {
             setCollapsedNodes((prev) => {
               const newSet = new Set(prev);
@@ -61,16 +66,19 @@ const MindMap = ({ data }: MindMapProps) => {
       });
 
       if (parentId) {
+        const isGoldenPathEdge = treeNode.isGoldenPath;
         edges.push({
           id: `${parentId}-${treeNode.id}`,
           source: parentId,
           target: treeNode.id,
           type: ConnectionLineType.SmoothStep,
-          animated: false,
+          animated: isGoldenPathEdge,
           style: {
-            stroke: '#4B5563',
-            strokeWidth: 2
+            stroke: isGoldenPathEdge ? '#FCD34D' : '#4B5563',
+            strokeWidth: isGoldenPathEdge ? 3 : 2,
+            filter: isGoldenPathEdge ? 'drop-shadow(0 0 8px #FCD34D)' : 'none',
           },
+          strokeDasharray: isGoldenPathEdge ? '0' : '0',
         });
       }
 
@@ -104,7 +112,7 @@ const MindMap = ({ data }: MindMapProps) => {
   }, [data, buildNodesAndEdges, setNodes, setEdges, fitView]);
 
   return (
-    <div className="w-full h-screen bg-[#0B0F14]">
+    <div className="w-full h-screen bg-[#0B0F14] relative">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -130,6 +138,7 @@ const MindMap = ({ data }: MindMapProps) => {
         <Controls
           className="!bg-gray-800 !border-gray-700 [&>button]:!bg-gray-800 [&>button]:!border-gray-700 [&>button]:!text-gray-300 [&>button:hover]:!bg-gray-700"
         />
+        <Legend />
       </ReactFlow>
     </div>
   );
